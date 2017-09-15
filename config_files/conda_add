@@ -1,1 +1,3 @@
-https://repo.continuum.io/miniconda/Miniconda3-3.16.0-Linux-armv7l.sh
+https://repo.continuum.io/miniconda/Miniconda-latest-Linux-armv7l.sh
+
+conda install -c poppy-project rpi.gpio
