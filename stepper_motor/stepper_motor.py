@@ -3,15 +3,17 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
-pin_1 = 31
-pin_2 = 33
-pin_3 = 35
-pin_4 = 37
+pin_1 = 6
+pin_2 = 13
+pin_3 = 19
+pin_4 = 26
 
-GPIO.setmode(pin_1, GPIO.OUT)
-GPIO.setmode(pin_2, GPIO.OUT)
-GPIO.setmode(pin_3, GPIO.OUT)
-GPIO.setmode(pin_4, GPIO.OUT)
+tempo = 2.0/1000
+
+GPIO.setup(pin_1, GPIO.OUT)
+GPIO.setup(pin_2, GPIO.OUT)
+GPIO.setup(pin_3, GPIO.OUT)
+GPIO.setup(pin_4, GPIO.OUT)
 
 GPIO.output(pin_1, 0)
 GPIO.output(pin_2, 0)
@@ -47,12 +49,12 @@ def step_4():
 	GPIO.output(pin_4, 1)
 
 
-while(true):
+while(True):
 	step_1()
-	time.sleep(1)
+	time.sleep(tempo)
 	step_2()
-	time.sleep(1)
+	time.sleep(tempo)
 	step_3()
-	time.sleep(1)
+	time.sleep(tempo)
 	step_4()
-	time.sleep(1)
+	time.sleep(tempo)
