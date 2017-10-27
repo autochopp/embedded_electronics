@@ -1,3 +1,5 @@
+# from https://pimylifeup.com/raspberry-pi-temperature-sensor/
+#use 3v3, a 4k7ohms between vcc and data and use pin7
 import os
 import glob
 import time
@@ -29,5 +31,5 @@ def read_temp():
 
 while True:
 	print(read_temp())	
-	#time.sleep(.1)
+	#time.sleep(1)
 
