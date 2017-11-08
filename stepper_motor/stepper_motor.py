@@ -50,11 +50,15 @@ def step_4():
 
 
 while(True):
-	step_1()
-	time.sleep(tempo)
-	step_2()
-	time.sleep(tempo)
-	step_3()
-	time.sleep(tempo)
-	step_4()
-	time.sleep(tempo)
+	try:
+		step_1()
+		time.sleep(tempo)
+		step_2()
+		time.sleep(tempo)
+		step_3()
+		time.sleep(tempo)
+		step_4()
+		time.sleep(tempo)
+	except KeyboardInterrupt:
+		break
+GPIO.cleanup()
