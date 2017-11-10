@@ -21,9 +21,6 @@ GPIO.output(pin_3, 0)
 GPIO.output(pin_4, 0)
 
 
-
-
-
 def step_1():
 	GPIO.output(pin_1, 1)
 	GPIO.output(pin_2, 1)

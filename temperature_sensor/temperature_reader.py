@@ -1,6 +1,6 @@
 import commands
 
-def getTemperature():	
+def getTemperature():
 	base = "/sys/bus/w1/devices/"
 	gotit = commands.getoutput("cat %s/28*/w1_slave"%base).split()[-1][2:]
 	return int(gotit)/1000.
