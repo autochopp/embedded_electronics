@@ -1,5 +1,5 @@
 import requests
-from temperature_sensor  import getTemperature
+from temperature  import getTemperature
 
 # This classes should send sensors data via socket
 class Collector:
@@ -30,5 +30,9 @@ class Collector:
 ####################### TEST ###################
 if __name__=="__main__":
 	test = Collector()
-	test.collect()
-	print  test.temperature
+	while(1):
+		try:
+			test.collect()
+			print "Temperature: ",  test.temperature
+		except:
+			break
