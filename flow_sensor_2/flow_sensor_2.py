@@ -5,8 +5,8 @@ import RPi.GPIO as gpio
 import time
 
 """ Global """
-PIN1 = 20
-PIN2 = 16
+PIN1 = 16
+PIN2 = 20
 
 
 """ Configurando GPIO """
@@ -35,6 +35,17 @@ while True:
 		print end
 		break
 
-print (end - init)
+tempo = end - init
+print (tempo)
+
+velocidade = 0.132/tempo
+vasao = velocidade * 0.000078539
+vasao = vasao*1000000 #vasao em ml/s
+
+print vasao
+
+
+
+
 gpio.cleanup()
 exit()

@@ -1,4 +1,5 @@
 import requests
+from temperature_sensor  import getTemperature
 
 # This classes should send sensors data via socket
 class Collector:
@@ -13,7 +14,7 @@ class Collector:
 
     # Collect all sensors data
     def collect(self):
-        pass
+        self.temperature = getTemperature()
 
     # Send the HTTP POST request
     def send_to_server(self):
@@ -24,3 +25,10 @@ class Collector:
         }
 
         requests.post(self.server_url, data)
+
+
+####################### TEST ###################
+if __name__=="__main__":
+	test = Collector()
+	test.collect()
+	print  test.temperature
