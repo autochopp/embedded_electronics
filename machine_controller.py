@@ -11,7 +11,7 @@ class MachineController:
 		pass
 	
 	# returns true when the beer was already taken
-	def already_got_beer(self):
+	def already_got_beer(self, what_beer):
 		pass
 
 
