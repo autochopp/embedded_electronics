@@ -3,7 +3,7 @@ import time
 
 def steps(total_steps, pins, forward=True):
 	
-	interval = 2./1000.
+	interval = 2./100.
 		
 	# default pins
 	
@@ -20,7 +20,13 @@ def steps(total_steps, pins, forward=True):
 	GPIO.setup(pin_4, GPIO.OUT)
 	
 
-	for i in xrange(0, total_steps):
+	GPIO.output(pin_1, 0)
+	GPIO.output(pin_2, 0)
+	GPIO.output(pin_3, 0)
+	GPIO.output(pin_4, 0)
+
+
+	for i in xrange(0, total_steps/4):
 		
 		if forward:		
 			GPIO.output(pin_1, 1)
@@ -105,7 +111,7 @@ def foam_activation(active):
 
 #########################    TEST  ####################
 if __name__=="__main__":
-	time.sleep(2)
+	time.sleep(1)
 	print "setting to 45"
 	cup_to_position(True)
 	time.sleep(2)

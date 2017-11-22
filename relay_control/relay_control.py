@@ -1,23 +1,28 @@
 import  RPi.GPIO as gpio
 import time
-relay_pin = 21
+def relay_control(relay_pins, enable):
+	
+	if enable:
+		state = 1
+	else:
+		state = 0
 
-gpio.setmode(gpio.BCM)
+	gpio.setmode(gpio.BCM)
+	for i in relay_pins:
+		gpio.setup(i, gpio.OUT)
+		gpio.output(i, state)
 
-gpio.setup(relay_pin, gpio.OUT)
+if __name__=="__main__":
+	pins = [21]
 
-gpio.output(relay_pin, 1) # active in low
-
-time.sleep(1)
-
-while True:
-	try:
-		gpio.output(relay_pin, 0)
-		print "relay on!"	
-		time.sleep(1)
-		gpio.output(relay_pin, 1)
-		print "relay off!"
-		time.sleep(1)
-	except KeyboardInterrupt:
-		break
+	while True:
+		try:
+			relay_control(pins, True)
+			print "relay on!"	
+			time.sleep(1)
+			relay_control(pins, False)
+			print "relay off!"
+			time.sleep(1)
+		except KeyboardInterrupt:
+			break
 gpio.cleanup()

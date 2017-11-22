@@ -1,6 +1,6 @@
 from cup_detector import cup_in_place
 from stepper_motor import *
-
+from relay_control import relay_control
 class MachineController:
 
 	def __init__(self):
@@ -16,6 +16,8 @@ class MachineController:
 		if cup_in_place(self.t_out):
 			#when placed, move to 45 degrees
 			cup_to_position(True)
+			
+			# close cup drawer
 			return True
 		else:
 			return False 

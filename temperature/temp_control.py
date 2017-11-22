@@ -4,7 +4,7 @@ from temperature_reader import getTemperature
 import time
 import  RPi.GPIO as gpio
 
-def temp_control(min_temp=7., max_temp=10., active_low=False, interval=2.):
+def temp_control(min_temp=2., max_temp=5., active_low=False, interval=2.):
 	relay_pin = 21
 	gpio.setmode(gpio.BCM)
 	gpio.setup(relay_pin, gpio.OUT)
