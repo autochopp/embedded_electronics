@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-
+#TODO put the real pins 
 def steps(total_steps, pins, forward=True):
 	
 	interval = 2./100.
@@ -89,11 +89,26 @@ def steps(total_steps, pins, forward=True):
 	GPIO.cleanup()
 
 #set to 45 degrees and back
-def cup_to_position(set_to_angle):
-	
+def cup_to_position(set_to_angle, size):
+	if size=="big":
+        st = 50
+    elif size=="small":
+        st = 100
+       
 	pins = [6, 13, 19, 26]
 	
 	if set_to_angle:
+	# 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
+		steps(st, pins, True)
+	else:
+		steps(st, pins, False)
+
+#control valve
+def valve_control(set_open):
+	
+	pins = [6, 13, 19, 26]
+	
+	if set_open:
 	# 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
 		steps(50, pins, True)
 	else:
@@ -102,7 +117,7 @@ def cup_to_position(set_to_angle):
 
 
 def foam_activation(active):
-	pins =[6, 13, 19, 26] #TODO put the real pins 
+	pins =[6, 13, 19, 26]
 	
 	if active:
 		steps(200, pins, True)
