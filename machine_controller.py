@@ -104,8 +104,11 @@ class MachineController:
 ##################### TEST ########################
 if __name__=="__main__":
     machine = MachineController()
-    print"cup activate test"
-    if machine.cup_activate():
-        print "placed"
-    else:
-        print "not placed"
+    print"chopp test"
+    print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
+    print "Abrindo gaveta, status: ",  machine.is_drawer_open()
+    print "Posicione o copo na base"
+    print "Copo na base:", machine.cup_activate()
+    print "Tirando chopp, status:", machine.already_got_beer()
+
+    
