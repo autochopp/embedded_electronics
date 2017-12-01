@@ -3,7 +3,7 @@ import time
 
 def edge_detector():
 	
-	sensor_pin = 18#pin 12
+	sensor_pin = 17
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(sensor_pin, GPIO.IN, GPIO.PUD_UP)
 	

@@ -106,7 +106,7 @@ def cup_to_position(set_to_angle, size):
 #control valve
 def valve_control(set_open):
 	
-	pins = [6, 13, 19, 26]
+	pins = [12, 16, 20, 21]
 	
 	if set_open:
 	# 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
@@ -115,14 +115,6 @@ def valve_control(set_open):
 		steps(50, pins, False)
 
 
-
-def foam_activation(active):
-	pins =[6, 13, 19, 26]
-	
-	if active:
-		steps(200, pins, True)
-	else:
-		steps(200, pins, False)
 
 #########################    TEST  ####################
 if __name__=="__main__":

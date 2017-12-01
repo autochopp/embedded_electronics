@@ -6,10 +6,12 @@ import time
 class MachineController:
 
     def __init__(self):
-        self.t_out = 20.
-        self.relay_pin_small = 21 #change later
-        self.relay_pin_big = 22 # changer later
-        self.cup_size_pin = 21
+        self.t_out = 60.
+        
+        self.relay_pin_small = 27 
+        self.relay_pin_big = 22 
+
+        self.cup_size_pin = None
         self.collar = False
         self.type = "tradicional" #for compatibility only
         self.size = "small"
@@ -42,7 +44,10 @@ class MachineController:
             self.collar = True
             self.type = "tradicional"
             self.size = "big"
-    
+        else:
+            return False
+
+        return True
     #returns true when the cup drawer is open
     def is_drawer_open(self):
         relay_control(self.cup_size_pin, True)
@@ -60,9 +65,10 @@ class MachineController:
 
     # returns true when the beer was already taken
     def already_got_beer(self):
-        valve_control(True)
-        time.sleep(1) #to get some foam 
-        valve_control(False)
+        #check if it generates foam TODO
+        #valve_control(True)
+        #time.sleep(1) #to get some foam 
+        #valve_control(False)
         
         if self.size=="small":
             t = self.small_time
@@ -79,18 +85,19 @@ class MachineController:
         #pouring chopp out
         valve_control(True)
 
-        while( ((t2-t1) <= t )or (not sensor)): #stops by time or beer level
+        while( ((t2-t1) <= t ) or (not sensor)): #stops by time or beer level
             t2 = time.time()
             sensor = edge_detector()
-        
+        #stops pouring
+        valve_control(False)
+
         cup_to_position(False, self.size) 
         #making collar and closing chopp
         if self.collar:
-            foam_activation(True)
+            valve_control(True)
             time.sleep(self.collar_time)
-            foam_activation(False)
-        #close and setting it back
-        valve_control(False)
+            valve_control(False)
+        
         return True
 
 

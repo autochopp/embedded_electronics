@@ -5,7 +5,7 @@ import time
 import  RPi.GPIO as gpio
 
 def temp_control(min_temp=2., max_temp=5., active_low=False, interval=2.):
-	relay_pin = 21
+	relay_pin = 2
 	gpio.setmode(gpio.BCM)
 	gpio.setup(relay_pin, gpio.OUT)
   	
