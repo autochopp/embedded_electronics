@@ -2,10 +2,14 @@ from cup_detector import *
 from stepper_motor import *
 from relay_control import relay_control
 import time
+import RPi.GPIO as gpio
 
 class MachineController:
 
     def __init__(self):
+        gpio.setwarnings(False)
+        gpio.cleanup()
+        
         self.t_out = 60.
         
         self.relay_pin_small = 27 
@@ -28,7 +32,7 @@ class MachineController:
             self.size = "small"
         
         elif chopp==1:
-            self.self.cup_size_pin = self.relay_pin_small 
+            self.cup_size_pin = self.relay_pin_small 
             self.collar = True
             self.type = "tradicional"
             self.size = "small"
@@ -51,7 +55,7 @@ class MachineController:
     #returns true when the cup drawer is open
     def is_drawer_open(self):
         relay_control(self.cup_size_pin, True)
-        time.sleep(0.1)
+        time.sleep(1)
         relay_control(self.cup_size_pin, False)
         return True # it stays open till the next step closes it
     
@@ -84,9 +88,15 @@ class MachineController:
         sensor = False
         #pouring chopp out
         valve_control(True)
-
-        while( ((t2-t1) <= t ) or (not sensor)): #stops by time or beer level
+        
+        print"total", t
+        while(not sensor): #stops by time or beer level
             t2 = time.time()
+            time.sleep(1)
+            if (t2-t1)<= t:
+                break
+            else:
+                print "time", t2-t1
             sensor = edge_detector()
         #stops pouring
         valve_control(False)
@@ -103,12 +113,15 @@ class MachineController:
 
 ##################### TEST ########################
 if __name__=="__main__":
-    machine = MachineController()
-    print"chopp test"
-    print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
-    print "Abrindo gaveta, status: ",  machine.is_drawer_open()
-    print "Posicione o copo na base"
-    print "Copo na base:", machine.cup_activate()
-    print "Tirando chopp, status:", machine.already_got_beer()
-
+    try:
+        machine = MachineController()
+        print"chopp test"
+        print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
+        print "Abrindo gaveta, status: ",  machine.is_drawer_open()
+        print "Posicione o copo na base"
+        print "Copo na base:", machine.cup_activate()
+        print "Tirar chopp"
+        print "chopp, status:", machine.already_got_beer()
+    except KeyboardInterrupt:
+        gpio.cleanup()
     

@@ -1,20 +1,20 @@
 import  RPi.GPIO as gpio
 import time
-def relay_control(relay_pins, enable):
+def relay_control(relay_pin, enable):
     gpio.setwarnings(False)    
-    if enable:
-        state = 1
-    else:
+    if enable: #active low
         state = 0
+    else:
+        state = 1
 
     gpio.setmode(gpio.BCM)
-    gpio.setup(i, gpio.OUT)
-    gpio.output(i, state)
+    gpio.setup(relay_pin, gpio.OUT)
+    gpio.output(relay_pin, state)
 
-    gpio.cleanup()
+    #gpio.cleanup()
 
 if __name__=="__main__":
-    pins = 21
+    pins = 22
 
     while True:
         try:

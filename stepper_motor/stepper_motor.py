@@ -3,12 +3,12 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
-pin_1 = 6
-pin_2 = 13
-pin_3 = 19
-pin_4 = 26
+pin_1 = 12
+pin_2 = 16
+pin_3 = 20
+pin_4 = 21
 
-tempo = 2.0/1000
+tempo = 2.0/800
 
 GPIO.setup(pin_1, GPIO.OUT)
 GPIO.setup(pin_2, GPIO.OUT)
