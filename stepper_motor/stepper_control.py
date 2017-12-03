@@ -120,8 +120,8 @@ def valve_control(set_open):
 if __name__=="__main__":
     time.sleep(1)
     print "setting to 45"
-    cup_to_position(True)
+    cup_to_position(True, "small")
     time.sleep(2)
     print "setting it back"
-    cup_to_position(False)
+    cup_to_position(False, "small")
     time.sleep(2)
