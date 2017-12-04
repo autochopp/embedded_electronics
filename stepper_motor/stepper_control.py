@@ -93,7 +93,7 @@ def cup_to_position(set_to_angle, size):
     if size=="big":
         st = 50
     elif size=="small":
-        st = 100
+        st = 50
        
     pins = [6, 13, 19, 26]
     
