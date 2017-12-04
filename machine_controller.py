@@ -23,10 +23,20 @@ class MachineController:
         self.big_time = 5. # need to be tested
         self.collar_time = 2. # needs to tested
 
+    def power_on_nobreak(self):
+        nobk_pin = 23
+        gpio.setmode(gpio.BCM)
+        gpio.setup(nobk_pin, gpio.IN, gpio.PUD_UP)
+        if (not gpio.input(nobk_pin)):
+            gpio.cleanup()
+            return True
+        else:
+            gpio.cleanup()
+            return False
     #receives and sets the settings
     def set_chopp(self, chopp):
         if chopp==0:
-            self.self.cup_size_pin = self.relay_pin_small 
+            self.cup_size_pin = self.relay_pin_small 
             self.collar = False
             self.type = "tradicional"
             self.size = "small"
@@ -38,7 +48,7 @@ class MachineController:
             self.size = "small"
         
         elif chopp==2:
-            self.self.cup_size_pin = self.relay_pin_big
+            self.cup_size_pin = self.relay_pin_big
             self.collar = False
             self.type = "tradicional"
             self.size = "big"
@@ -48,10 +58,7 @@ class MachineController:
             self.collar = True
             self.type = "tradicional"
             self.size = "big"
-        else:
-            return False
-
-        return True
+        print "########################### %s %%%%%%%%%%%%%%"%chopp
     #returns true when the cup drawer is open
     def is_drawer_open(self):
         relay_control(self.cup_size_pin, True)
@@ -113,15 +120,21 @@ class MachineController:
 
 ##################### TEST ########################
 if __name__=="__main__":
-    try:
-        machine = MachineController()
-        print"chopp test"
-        print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
-        print "Abrindo gaveta, status: ",  machine.is_drawer_open()
-        print "Posicione o copo na base"
-        print "Copo na base:", machine.cup_activate()
-        print "Tirar chopp"
-        print "chopp, status:", machine.already_got_beer()
-    except KeyboardInterrupt:
-        gpio.cleanup()
-    
+    while(True):
+        try:
+            machine = MachineController()
+            """
+            print"chopp test"
+            print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
+            print "Abrindo gaveta, status: ",  machine.is_drawer_open()
+            print "Posicione o copo na base"
+            print "Copo na base:", machine.cup_activate()
+            print "Tirar chopp"
+            print "chopp, status:", machine.already_got_beer()
+            """
+           
+            print "power on nobreak: ", machine.power_on_nobreak()
+        except KeyboardInterrupt:
+            break 
+            gpio.cleanup()
+        
