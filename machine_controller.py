@@ -10,7 +10,7 @@ class MachineController:
         gpio.setwarnings(False)
         gpio.cleanup()
         
-        self.t_out = 60.
+        self.t_out = 180.
         
         self.relay_pin_small = 27 
         self.relay_pin_big = 22 
@@ -22,6 +22,7 @@ class MachineController:
         self.small_time = 10. #need to be tested
         self.big_time = 5. # need to be tested
         self.collar_time = 2. # needs to tested
+        self.working_path = "/home/pi/autochopp-machine/embedded_electronics/tmp/"
         
         #volumes TODO
         self.volume_big = 400
@@ -70,6 +71,13 @@ class MachineController:
         print "########################### %s %%%%%%%%%%%%%%"%chopp
     #returns true when the cup drawer is open
     def is_drawer_open(self):
+        #changes the state of the leds
+        led_path = self.working_path + "leds.status"
+        f = open(led_path, "w")
+        f.write("taking_cup")
+        f.close()
+
+
         relay_control(self.cup_size_pin, True)
         time.sleep(1)
         relay_control(self.cup_size_pin, False)
@@ -85,6 +93,14 @@ class MachineController:
 
     # returns true when the beer was already taken
     def already_got_beer(self):
+        #changes the state of the leds
+        led_path = self.working_path + "leds.status"
+        f = open(led_path, "w")
+        f.write("pouring_chopp")
+        f.close()
+
+
+
         #check if it generates foam TODO
         #valve_control(True)
         #time.sleep(1) #to get some foam 
@@ -125,18 +141,25 @@ class MachineController:
             valve_control(False)
         
         #update volume on file 
-        file_path = "/home/pi/autochopp-machine/embedded_electronics/volume.vol"
+        volume_path = self.working_path + "volume.vol"
         while(True):
             try:
-                f = open(file_path, "r")
+                f = open(volume_path, "r")
                 previous_volume = int(f.read())
                 f.close()
-                f = open(file_path, "w")
+                f = open(volume_path, "w")
                 f.write("%s"%(previous_volume - self.volume ))
                 f.close()
                 break
             except:
                 print "####### error updating volume" 
+        
+        #changes the state of the leds
+        led_path = self.working_path + "leds.status"
+        f = open(led_path, "w")
+        f.write("")
+        f.close()
+        
         return True
 
 

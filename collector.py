@@ -7,23 +7,24 @@ class Collector:
     def __init__(self, server_url='http://127.0.0.1', port="3000"):
         self.temperature = 0.0
         self.volume = 0 # in ml, int
-        self.machine_status = False
+        self.machine_status = "true"
         self.sent_status = False
         # Rails API is running in localhost:3000
         self.server_url = server_url + ':' + str(port) + '/setsensors'
 
     # Collect all sensors data
     def collect(self):
+        self.machine_status = "true"
         try:
             self.temperature = getTemperature()
         except:
-            self.temperature = 'null'
+            self.machine_status = "false"
         try:
-            f = open("/home/pi/autochopp-machine/embedded_electronics/volume.vol", "r")
+            f = open("/home/pi/autochopp-machine/embedded_electronics/tmp/volume.vol", "r")
             self.volume = int(f.read())
             f.close()
         except:
-            self.volume = 'null'
+            self.machine_status = "false"
 
     # Send the HTTP POST request
     def send_to_server(self):
