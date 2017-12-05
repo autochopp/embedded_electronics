@@ -22,11 +22,17 @@ class MachineController:
         self.small_time = 10. #need to be tested
         self.big_time = 5. # need to be tested
         self.collar_time = 2. # needs to tested
-
+        
+        #volumes TODO
+        self.volume_big = 400
+        self.volume_small = 250
+        self.volume = 0 
+    
     def power_on_nobreak(self):
         nobk_pin = 23
         gpio.setmode(gpio.BCM)
         gpio.setup(nobk_pin, gpio.IN, gpio.PUD_UP)
+        print "$$$$$$$$$$$$$$$$$$$$$$$ nobreak $$$$$$$$$$$$$$$$$$$$$$$"
         if (not gpio.input(nobk_pin)):
             gpio.cleanup()
             return True
@@ -40,24 +46,27 @@ class MachineController:
             self.collar = False
             self.type = "tradicional"
             self.size = "small"
+            self.volume = self.volume_small
         
         elif chopp==1:
             self.cup_size_pin = self.relay_pin_small 
             self.collar = True
             self.type = "tradicional"
             self.size = "small"
-        
+            self.volume = self.volume_small
         elif chopp==2:
             self.cup_size_pin = self.relay_pin_big
             self.collar = False
             self.type = "tradicional"
             self.size = "big"
-        
+            self.volume = self.volume_big
         elif chopp==3:
             self.self.cup_size_pin = self.relay_pin_big
             self.collar = True
             self.type = "tradicional"
             self.size = "big"
+            self.volume = self.volume_big
+
         print "########################### %s %%%%%%%%%%%%%%"%chopp
     #returns true when the cup drawer is open
     def is_drawer_open(self):
@@ -115,6 +124,19 @@ class MachineController:
             time.sleep(self.collar_time)
             valve_control(False)
         
+        #update volume on file 
+        file_path = "/home/pi/autochopp-machine/embedded_electronics/volume.vol"
+        while(True):
+            try:
+                f = open(file_path, "r")
+                previous_volume = int(f.read())
+                f.close()
+                f = open(file_path, "w")
+                f.write("%s"%(previous_volume - self.volume ))
+                f.close()
+                break
+            except:
+                print "####### error updating volume" 
         return True
 
 
@@ -133,7 +155,9 @@ if __name__=="__main__":
             print "chopp, status:", machine.already_got_beer()
             """
            
-            print "power on nobreak: ", machine.power_on_nobreak()
+            print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
+            machine.already_got_beer()
+            # print "power on nobreak: ", machine.power_on_nobreak()
         except KeyboardInterrupt:
             break 
             gpio.cleanup()
