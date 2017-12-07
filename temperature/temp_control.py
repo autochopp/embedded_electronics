@@ -4,7 +4,7 @@ from temperature_reader import getTemperature
 import time
 import  RPi.GPIO as gpio
 
-def temp_control(min_temp=2., max_temp=5., active_low=False, interval=30.):
+def temp_control(min_temp=4., max_temp=6., active_low=False, interval=10.):
     relay_pin = 2
     gpio.setmode(gpio.BCM)
     gpio.setup(relay_pin, gpio.OUT)
@@ -16,8 +16,10 @@ def temp_control(min_temp=2., max_temp=5., active_low=False, interval=30.):
         active = 1
         inactive = 0
 
-
-    temp = getTemperature()
+    try:
+        temp = getTemperature()
+    except:
+        temp = 25.
     if (temp>max_temp):
         gpio.output(relay_pin, active)
         print "relay on! "

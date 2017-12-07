@@ -14,15 +14,15 @@ def relay_control(relay_pin, enable):
     #gpio.cleanup()
 
 if __name__=="__main__":
-    pins = 22
-
-    while True:
-        try:
-            relay_control(pins, True)
-            print "relay on!"    
-            time.sleep(1)
-            relay_control(pins, False)
-            print "relay off!"
-            time.sleep(1)
-        except KeyboardInterrupt:
-            break
+    pins = 27
+    t = 0.16
+    #while True:
+        #try:
+    relay_control(pins, True)
+    print "relay on!"    
+    time.sleep(t)
+    relay_control(pins, False)
+    print "relay off!"
+    time.sleep(t)
+       # except KeyboardInterrupt:
+        #    break

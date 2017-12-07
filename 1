@@ -86,7 +86,7 @@ class MachineController:
 
 
         relay_control(self.cup_size_pin, True)
-        time.sleep(0.16)
+        time.sleep(0.2)
         relay_control(self.cup_size_pin, False)
         
         time.sleep(self.human_time) #human delay
@@ -133,13 +133,11 @@ class MachineController:
         sensor = False
         #pouring chopp out
         
+        time.sleep(self.human_time)
 
         valve_control(True)
-
-        time.sleep(self.human_time) 
         
         print"total", t
-        
         while( not sensor): #stops by time or beer level
             t2 = time.time()
             time.sleep(1)

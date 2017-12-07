@@ -16,8 +16,7 @@ def edge_detector():
 
 ######################### TEST#################
 if __name__=="__main__":
-    print "test for the edge detector"
-
-    edge_detector()
-
-    GPIO.cleanup()
+    while(1):
+        print "test for the edge detector", edge_detector()
+        time.sleep(1)
+    #GPIO.cleanup()
