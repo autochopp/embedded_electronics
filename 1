@@ -1,210 +1,147 @@
-from cup_detector import *
-from stepper_motor import *
-from relay_control import relay_control
-import time
 import RPi.GPIO as gpio
+import time
 
-class MachineController:
+def steps(total_steps, pins, forward=True, interval = 0.04):
+   
+     
+    pin_1 = pins[0]
+    pin_2 = pins[1]
+    pin_3 = pins[2]
+    pin_4 = pins[3]
+    # default pins
+  
 
-    def __init__(self):
-        gpio.setwarnings(False)
-        gpio.cleanup()
-        
-        self.t_out = 180.
-        
-        self.relay_pin_small = 27 
-        self.relay_pin_big = 22 
+    gpio.setmode(gpio.BCM)    
+    gpio.setup(pin_1, gpio.OUT)
+    gpio.setup(pin_2, gpio.OUT)
+    gpio.setup(pin_3, gpio.OUT)
+    gpio.setup(pin_4, gpio.OUT)
 
-        self.cup_size_pin = None
-        self.collar = False
-        self.type = "tradicional" #for compatibility only
-        self.size = "small"
-        self.small_time = 3. #need to be tested
-        self.big_time = 5. # need to be tested
-        self.collar_time =.5 # needs to tested
-        self.working_path = "/home/pi/autochopp-machine/embedded_electronics/tmp/"
-        self.human_time = 1.        
-        #volumes TODO
-        self.volume_big = 300
-        self.volume_small = 200
-        self.volume = 0 
+    for i in xrange(0, total_steps/4):
         
-        #cleaning 
-        led_path = self.working_path + "leds.status"
-        f = open(led_path, "w")
-        f.write("")
-        f.close()
+        if forward:        
+            gpio.output(pin_1, 1)
+            gpio.output(pin_2, 1)
+            gpio.output(pin_3, 0)
+            gpio.output(pin_4, 0)
+
+            time.sleep(interval)    
+
+            gpio.output(pin_1, 0)
+            gpio.output(pin_2, 1)
+            gpio.output(pin_3, 1)
+            gpio.output(pin_4, 0)
+
+            time.sleep(interval)    
+
+            gpio.output(pin_1, 0)
+            gpio.output(pin_2, 0)
+            gpio.output(pin_3, 1)
+            gpio.output(pin_4, 1)
+
+            time.sleep(interval)    
+
+            gpio.output(pin_1, 1)
+            gpio.output(pin_2, 0)
+            gpio.output(pin_3, 0)
+            gpio.output(pin_4, 1)
+
+            time.sleep(interval)   
+
+                       
+        
+        else:
+            gpio.output(pin_1, 1)
+            gpio.output(pin_2, 0)
+            gpio.output(pin_3, 0)
+            gpio.output(pin_4, 1)
+
+            time.sleep(interval)    
+
+            gpio.output(pin_1, 0)
+            gpio.output(pin_2, 0)
+            gpio.output(pin_3, 1)
+            gpio.output(pin_4, 1)
+
+            time.sleep(interval)    
+
+            gpio.output(pin_1, 0)
+            gpio.output(pin_2, 1)
+            gpio.output(pin_3, 1)
+            gpio.output(pin_4, 0)
+
+            time.sleep(interval)    
+
+            gpio.output(pin_1, 1)
+            gpio.output(pin_2, 1)
+            gpio.output(pin_3, 0)
+            gpio.output(pin_4, 0)
+
+            time.sleep(interval)
+
+
+#set to 45 degrees and back
+def cup_to_position(set_to_angle):
+    st = 52
+    
+    pins = [12, 16, 20, 21]
+    #pins = [6, 13, 19, 26]
+    
+   
+    if set_to_angle:
+    # 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
+        steps(st, pins, forward=True, interval=0.02)
+        #gpio.output(12, 1)
+        #gpio.output(16, 0)
+        #gpio.output(20, 0)
+        #gpio.output(21, 1)
+
+
+    else:
+        steps(st, pins, forward=False, interval=0.02)
+
+    gpio.cleanup()
+
+#control valve
+def valve_control(set_open):
+    
+    
+    pins = [12, 16, 20, 21]
       
+    if set_open:
+    # 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
+        steps(40, pins, forward=False, interval=0.004)
 
-    def power_on_nobreak(self):
-        nobk_pin = 23
-        gpio.setmode(gpio.BCM)
-        gpio.setup(nobk_pin, gpio.IN, gpio.PUD_UP)
-        print "$$$$$$$$$$$$$$$$$$$$$$$ nobreak $$$$$$$$$$$$$$$$$$$$$$$"
-        if (not gpio.input(nobk_pin)):
-            gpio.cleanup()
-            return True
-        else:
-            gpio.cleanup()
-            return False
-    #receives and sets the settings
-    def set_chopp(self, chopp):
-        if chopp==0:
-            self.cup_size_pin = self.relay_pin_small 
-            self.collar = False
-            self.type = "tradicional"
-            self.size = "small"
-            self.volume = self.volume_small
-        
-        elif chopp==1:
-            self.cup_size_pin = self.relay_pin_small 
-            self.collar = True
-            self.type = "tradicional"
-            self.size = "small"
-            self.volume = self.volume_small
-        elif chopp==2:
-            self.cup_size_pin = self.relay_pin_big
-            self.collar = False
-            self.type = "tradicional"
-            self.size = "big"
-            self.volume = self.volume_big
-        elif chopp==3:
-            self.self.cup_size_pin = self.relay_pin_big
-            self.collar = True
-            self.type = "tradicional"
-            self.size = "big"
-            self.volume = self.volume_big
-
-        print "########################### %s %%%%%%%%%%%%%%"%chopp
-    #returns true when the cup drawer is open
-    def is_drawer_open(self):
-        #changes the state of the leds
-        led_path = self.working_path + "leds.status"
-        f = open(led_path, "w")
-        f.write("taking_cup")
-        f.close()
-
-
-        relay_control(self.cup_size_pin, True)
-        time.sleep(0.2)
-        relay_control(self.cup_size_pin, False)
-        
-        time.sleep(self.human_time) #human delay
-
-        return True # it stays open till the next step closes it
+    else:
+        steps(40, pins, forward=True, interval=0.004)
     
-    #returns true if the cup is placed and in the right position to get beer
-    def cup_activate(self):
-        #detect cup in place
-        if cup_in_place(self.t_out):
-            return True
-        else:
-            return False 
+    gpio.cleanup()
 
-    # returns true when the beer was already taken
-    def already_got_beer(self):
-        #pins to set
-          
-                
-        #changes the state of the leds
-        led_path = self.working_path + "leds.status"
-        f = open(led_path, "w")
-        f.write("pouring_chopp")
-        f.close()
+def foam(minus):
+   
+    pins = [12, 16, 20, 21]
+      
+    if minus:
+        steps(10, pins,  forward=False, interval=0.004)
 
-        time.sleep(self.human_time) #another human delay
+    else:
+        steps(10, pins,  forward=False, interval=0.004)
 
-        #check if it generates foam TODO
-        #valve_control(True)
-        #time.sleep(1) #to get some foam 
-        #valve_control(False)
-        
-        if self.size=="small":
-            t = self.small_time
-        elif self.size=="big":
-            t = self.big_time
-        
-        #set cup to position
-        cup_to_position(True)
-        
-        #start time
-        t1 = time.time()
-        t2 = time.time()
-        sensor = False
-        #pouring chopp out
-        
-        time.sleep(self.human_time)
-
-        valve_control(True)
-        
-        print"total", t
-        while( not sensor): #stops by time or beer level
-            t2 = time.time()
-            time.sleep(1)
-            if (t2-t1)>= t:
-                break
-            else:
-                print "time", t2-t1
-            sensor = edge_detector()
-            print"value sensor",  sensor
-        #stops pouring
-
-        time.sleep(self.human_time) 
-        
-        valve_control(False)
-          
-        time.sleep(self.human_time) 
-
-        cup_to_position(False) 
-        #making collar and closing chopp
-        """
-        if self.collar:
-            foam(True)
-            time.sleep(self.collar_time)
-            foam(False)
-        """
-        #update volume on file 
-        volume_path = self.working_path + "volume.vol"
-        while(True):
-            try:
-                f = open(volume_path, "r")
-                previous_volume = int(f.read())
-                f.close()
-                f = open(volume_path, "w")
-                f.write("%s"%(previous_volume - self.volume ))
-                f.close()
-                break
-            except:
-                print "####### error updating volume" 
-        
-        #changes the state of the leds
-        led_path = self.working_path + "leds.status"
-        f = open(led_path, "w")
-        f.write("")
-        f.close()
-       
-        gpio.cleanup()
-        return True
-
-
-##################### TEST ########################
+#########################    TEST  ####################
 if __name__=="__main__":
-    #while(True):
-    #try:
-    machine = MachineController()
-    print"chopp test"
-    print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
-    print "Abrindo gaveta, status: ",  machine.is_drawer_open()
-    print "Posicione o copo na base"
-    print "Copo na base:", machine.cup_activate()
-    print "Tirar chopp"
-    print "chopp, status:", machine.already_got_beer()
+    for i in xrange(1):
 
+
+
+        time.sleep(1)
+        #print "setting to cup"
+        cup_to_position(True)
+        time.sleep(2)
+        #valve_control(True)
+        #time.sleep(1)
+        #valve_control(False)
+        #time.sleep(2)
+        #print "setting it back"
+        #cup_to_position(False)
        
-    #print "Tirando chopp pequeno e pouco colarinho, status:", machine.set_chopp(1)
-    #machine.already_got_beer()
-    # print "power on nobreak: ", machine.power_on_nobreak()
-    #except KeyboardInterrupt:
-    #    break 
-    #    gpio.cleanup()
-    
+   # gpio.cleanup()
