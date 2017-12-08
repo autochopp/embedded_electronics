@@ -84,6 +84,7 @@ def steps(total_steps, pins, forward=True, interval = 0.04):
 def cup_to_position(set_to_angle):
     st = 52
     pins = [12, 16, 20, 21]
+    #pins = [6, 13, 19, 26]
     
     if set_to_angle:
     # 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
@@ -130,12 +131,12 @@ if __name__=="__main__":
         time.sleep(1)
         #print "setting to cup"
         cup_to_position(True)
-        time.sleep(1)
-        valve_control(True)
-        time.sleep(3)
-        valve_control(False)
-        time.sleep(1)
+        time.sleep(2)
+        #valve_control(True)
+        #time.sleep(1)
+        #valve_control(False)
+        #time.sleep(2)
         #print "setting it back"
-        cup_to_position(False)
+        #cup_to_position(False)
        
-    gpio.cleanup()
+   # gpio.cleanup()

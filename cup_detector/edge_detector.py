@@ -3,7 +3,7 @@ import time
 
 def edge_detector():
 	
-    sensor_pin = 17
+    sensor_pin = 17 #18
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(sensor_pin, GPIO.IN, GPIO.PUD_UP)
 	
@@ -17,6 +17,9 @@ def edge_detector():
 ######################### TEST#################
 if __name__=="__main__":
     while(1):
-        print "test for the edge detector", edge_detector()
-        time.sleep(1)
-    #GPIO.cleanup()
+        try:
+            print "test for the edge detector", edge_detector()
+            time.sleep(1)
+        except KeyboardInterrupt:
+            break
+            GPIO.cleanup()
