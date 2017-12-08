@@ -83,8 +83,9 @@ def steps(total_steps, pins, forward=True, interval = 0.04):
 #set to 45 degrees and back
 def cup_to_position(set_to_angle):
     st = 52
-    pins = [12, 16, 20, 21]
     
+    pins = [6, 13, 19, 26]  
+   
     if set_to_angle:
     # 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
         steps(st, pins, forward=True, interval=0.02)
@@ -103,7 +104,8 @@ def cup_to_position(set_to_angle):
 def valve_control(set_open):
     
     
-    pins = [6, 13, 19, 26]
+    pins = [12, 16, 20, 21]
+      
     if set_open:
     # 200steps per revolution, 1.8 degrees, but the motor needs to turn 90degrees, 50 steps
         steps(40, pins, forward=False, interval=0.004)
@@ -114,7 +116,9 @@ def valve_control(set_open):
     gpio.cleanup()
 
 def foam(minus):
-    pins = [6, 13, 19, 26]
+   
+    pins = [12, 16, 20, 21]
+      
     if minus:
         steps(10, pins,  forward=False, interval=0.004)
 
